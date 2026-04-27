@@ -1,4 +1,5 @@
 from datetime import datetime
+from urllib.parse import quote
 
 from django.db.models import Prefetch
 from django.db.models.functions import Coalesce, Least
@@ -70,10 +71,37 @@ class ProjectDetailViewSet(viewsets.ModelViewSet):
 
 
 def create_pdf(request):
-    resume = Resume.objects.prefetch_related(
-        "expressions", "links", "skills", "careers", "projects"
-    ).get(is_represented=True)
-    print(resume.profile_image.url)
+
+    resume = (Resume.objects.prefetch_related(
+        Prefetch(
+            'expressions',
+            queryset=Expression.objects.annotate(
+                effective_order=Least('resumeexpression__order', 'order')
+            ).order_by('effective_order').distinct()
+        ),
+        Prefetch(
+            'links',
+            queryset=Link.objects.annotate(
+                effective_order=Least('resumelink__order', 'order')
+            ).order_by('effective_order').distinct()
+        ),
+        Prefetch(
+            'skills',
+            queryset=Skill.objects.annotate(
+                effective_order=Least('resumeskill__order', 'order')
+            ).order_by('effective_order').distinct()
+        ),
+        Prefetch('careers', queryset=Career.objects.all().prefetch_related("skills", "careerproject_set").annotate(
+            exit_date=Coalesce("end_date", datetime.now().date()),
+        ).order_by("-exit_date")),
+        Prefetch(
+            'projects',
+            queryset=Project.objects.prefetch_related("skills").annotate(
+                effective_order=Least('resumeproject__order', 'order')
+            ).order_by('effective_order').distinct()
+        ),
+    ).get(is_represented=True))
+
     context = {
         "resume": resume,
         "links": resume.links.all(),
@@ -88,6 +116,8 @@ def create_pdf(request):
         html_str = render_to_string('pdf_template.html', context)
         pdf = HTML(string=html_str).write_pdf()
 
+        filename = "유정훈_이력서"
+        encoded = quote(filename, safe='')
         return HttpResponse(pdf, content_type='application/pdf',
-                            headers={'Content-Disposition': 'attachment; filename="resume.pdf"'})
+                            headers={'Content-Disposition': f'attachment; filename="{encoded}.pdf"'})
     return render(request, 'pdf_template.html', context)
