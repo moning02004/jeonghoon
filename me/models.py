@@ -147,7 +147,7 @@ class Resume(models.Model):
     skills = models.ManyToManyField(Skill, through="ResumeSkill")
     careers = models.ManyToManyField(Career, through="ResumeCareer")
     projects = models.ManyToManyField(Project, through="ResumeProject")
-    others = models.ManyToManyField(Others, through="ResumeOhters")
+    others = models.ManyToManyField(Others, through="ResumeOthers")
 
     def __str__(self):
         return self.name
@@ -158,9 +158,9 @@ class Resume(models.Model):
         verbose_name_plural = "이력서"
 
 
-class ResumeOhters(models.Model):
+class ResumeOthers(models.Model):
     resume = models.ForeignKey(Resume, on_delete=models.CASCADE)
-    other = models.ForeignKey(Others, on_delete=models.CASCADE)
+    others = models.ForeignKey(Others, on_delete=models.CASCADE)
     order = models.PositiveIntegerField(default=100)
 
 
