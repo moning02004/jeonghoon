@@ -67,6 +67,7 @@ class CareerProject(models.Model):
     content = models.TextField(blank=True)
     result = models.TextField(blank=True)
     order = models.IntegerField(default=100)
+    files = models.FileField(upload_to='career_projects/%Y/%m/%d', blank=True)
 
     def __str__(self):
         return self.title
@@ -102,6 +103,7 @@ class Project(models.Model):
     content = models.TextField(blank=True)
     result = models.TextField(blank=True)
     skills = models.ManyToManyField(Skill)
+    files = models.FileField(upload_to='projects/%Y/%m/%d', blank=True)
 
     def __str__(self):
         return self.title
