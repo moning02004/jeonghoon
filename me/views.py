@@ -70,10 +70,37 @@ class ProjectDetailViewSet(viewsets.ModelViewSet):
 
 
 def create_pdf(request):
-    resume = Resume.objects.prefetch_related(
-        "expressions", "links", "skills", "careers", "projects"
-    ).get(is_represented=True)
-    print(resume.profile_image.url)
+
+    resume = (Resume.objects.prefetch_related(
+        Prefetch(
+            'expressions',
+            queryset=Expression.objects.annotate(
+                effective_order=Least('resumeexpression__order', 'order')
+            ).order_by('effective_order').distinct()
+        ),
+        Prefetch(
+            'links',
+            queryset=Link.objects.annotate(
+                effective_order=Least('resumelink__order', 'order')
+            ).order_by('effective_order').distinct()
+        ),
+        Prefetch(
+            'skills',
+            queryset=Skill.objects.annotate(
+                effective_order=Least('resumeskill__order', 'order')
+            ).order_by('effective_order').distinct()
+        ),
+        Prefetch('careers', queryset=Career.objects.all().prefetch_related("skills").annotate(
+            exit_date=Coalesce("end_date", datetime.now().date()),
+        ).order_by("-exit_date")),
+        Prefetch(
+            'projects',
+            queryset=Project.objects.prefetch_related("skills").annotate(
+                effective_order=Least('resumeproject__order', 'order')
+            ).order_by('effective_order').distinct()
+        ),
+    ).get(is_represented=True))
+
     context = {
         "resume": resume,
         "links": resume.links.all(),
