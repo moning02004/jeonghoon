@@ -1,0 +1,13 @@
+services:
+  whoami:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    container_name: whoami-web
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    restart: always
