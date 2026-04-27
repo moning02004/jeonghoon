@@ -67,10 +67,18 @@ class CareerProject(models.Model):
     content = models.TextField(blank=True)
     result = models.TextField(blank=True)
     order = models.IntegerField(default=100)
-    files = models.FileField(upload_to='career_projects/%Y/%m/%d', blank=True)
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name = "경력 프로젝트 이미지"
+        verbose_name_plural = "경력 프로젝트 이미지"
+
+
+class CareerProjectImage(models.Model):
+    career_project = models.ForeignKey(CareerProject, on_delete=models.CASCADE)
+    files = models.FileField(upload_to='career_projects/%Y/%m/%d', blank=True)
 
     class Meta:
         verbose_name = "경력 프로젝트"
@@ -103,7 +111,6 @@ class Project(models.Model):
     content = models.TextField(blank=True)
     result = models.TextField(blank=True)
     skills = models.ManyToManyField(Skill)
-    files = models.FileField(upload_to='projects/%Y/%m/%d', blank=True)
 
     def __str__(self):
         return self.title
@@ -111,6 +118,15 @@ class Project(models.Model):
     class Meta:
         verbose_name = "프로젝트"
         verbose_name_plural = "프로젝트"
+
+
+class ProjectImage(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    files = models.FileField(upload_to='projects/%Y/%m/%d', blank=True)
+
+    class Meta:
+        verbose_name = "프로젝트 이미지"
+        verbose_name_plural = "프로젝트 이미지"
 
 
 class Resume(models.Model):
