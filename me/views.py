@@ -1,4 +1,5 @@
 from datetime import datetime
+from urllib.parse import quote
 
 from django.db.models import Prefetch
 from django.db.models.functions import Coalesce, Least
@@ -90,7 +91,7 @@ def create_pdf(request):
                 effective_order=Least('resumeskill__order', 'order')
             ).order_by('effective_order').distinct()
         ),
-        Prefetch('careers', queryset=Career.objects.all().prefetch_related("skills").annotate(
+        Prefetch('careers', queryset=Career.objects.all().prefetch_related("skills", "careerproject_set").annotate(
             exit_date=Coalesce("end_date", datetime.now().date()),
         ).order_by("-exit_date")),
         Prefetch(
@@ -115,6 +116,8 @@ def create_pdf(request):
         html_str = render_to_string('pdf_template.html', context)
         pdf = HTML(string=html_str).write_pdf()
 
+        filename = "유정훈_이력서"
+        encoded = quote(filename, safe='')
         return HttpResponse(pdf, content_type='application/pdf',
-                            headers={'Content-Disposition': 'attachment; filename="resume.pdf"'})
+                            headers={'Content-Disposition': f'attachment; filename="{encoded}.pdf"'})
     return render(request, 'pdf_template.html', context)
