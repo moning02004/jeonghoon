@@ -78,7 +78,7 @@ class CareerProject(models.Model):
 
 class CareerProjectImage(models.Model):
     career_project = models.ForeignKey(CareerProject, on_delete=models.CASCADE)
-    files = models.FileField(upload_to='career_projects/%Y/%m/%d', blank=True)
+    file = models.FileField(upload_to='career_projects/%Y/%m/%d', blank=True)
 
     class Meta:
         verbose_name = "경력 프로젝트"
@@ -122,7 +122,7 @@ class Project(models.Model):
 
 class ProjectImage(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    files = models.FileField(upload_to='projects/%Y/%m/%d', blank=True)
+    file = models.FileField(upload_to='projects/%Y/%m/%d', blank=True)
 
     class Meta:
         verbose_name = "프로젝트 이미지"
