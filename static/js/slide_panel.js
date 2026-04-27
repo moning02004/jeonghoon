@@ -111,6 +111,10 @@ document.addEventListener('DOMContentLoaded', function () {
             getPanelBody(bodies, panelBody, data)
         } else if (dataType === "skills") {
             panelTitle.innerHTML = data.name;
+            const attrs = {
+                "description": "",
+            }
+            getPanelAttribute(attrs, panelBody, data)
         }
 
         document.getElementById('slide-panel').classList.remove('translate-x-full', "hidden");

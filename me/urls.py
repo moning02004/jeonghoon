@@ -7,5 +7,6 @@ urlpatterns = [
 
     path("careers/<int:pk>", views.CareerDetailViewSet.as_view({"get": "retrieve"}), name="career-detail"),
     path("projects/<int:pk>", views.ProjectDetailViewSet.as_view({"get": "retrieve"}), name="career-detail"),
+    path("skills/<int:pk>", views.SkillViewSet.as_view({"get": "retrieve"}), name="career-detail"),
     path("pdf", views.create_pdf, name="create_pdf"),
 ]

@@ -31,6 +31,7 @@ class Skill(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     order = models.IntegerField(default=100)
+    is_visible = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name

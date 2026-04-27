@@ -5,13 +5,9 @@
         <!-- Languages -->
         <div class="flex flex-wrap gap-3">
             {% for skill in resume.skills.all %}
-                <span class="text-accent border border-accent-border px-3 py-1 rounded-[0.5rem] tracking-wide cursor-pointer">
+                <span class="slide-panel text-accent border border-accent-border px-3 py-1 rounded-[0.5rem] tracking-wide cursor-pointer hover:bg-[#efefef]"
+                      data-id="skills/{{ skill.id }}">
                 {{ skill.name }}
-                </span>
-                <div class="hidden description" id="skill-{{ skill.id }}">{{ skill.description }}</div>
-            {% empty %}
-                <span class="text-muted">
-                기술 스택을 추가해보세요.
                 </span>
             {% endfor %}
 
