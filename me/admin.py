@@ -1,43 +1,49 @@
 from django.contrib import admin
 
 from me.models import Project, Resume, Link, Expression, Skill, Career, ResumeExpression, ResumeLink, ResumeSkill, \
-    ResumeCareer, ResumeProject, CareerProject, ResumeOhters, Others
+    ResumeCareer, ResumeProject, CareerProject, ResumeOthers, Others, CareerProjectImage, ProjectImage
 
 
 class ExpressionInline(admin.TabularInline):
     model = ResumeExpression
     show_change_link = True
     extra = 0
+    raw_id_fields = ["expression"]
 
 
 class LinkInline(admin.TabularInline):
     model = ResumeLink
     show_change_link = True
     extra = 0
+    raw_id_fields = ["link"]
 
 
 class SkillInline(admin.TabularInline):
     model = ResumeSkill
     show_change_link = True
     extra = 0
+    raw_id_fields = ["skill"]
 
 
 class CareerInline(admin.TabularInline):
     model = ResumeCareer
     show_change_link = True
     extra = 0
+    raw_id_fields = ["career"]
 
 
 class ProjectInline(admin.TabularInline):
     model = ResumeProject
     show_change_link = True
     extra = 0
+    raw_id_fields = ["project"]
 
 
 class OthersInline(admin.TabularInline):
-    model = ResumeOhters
+    model = ResumeOthers
     show_change_link = True
     extra = 0
+    raw_id_fields = ["others"]
 
 
 @admin.register(Resume)
@@ -79,8 +85,20 @@ class MyInfoAdmin(admin.ModelAdmin):
         return obj.description[:50] + "..." if len(obj.description) > 10 else obj.description
 
 
-class CareerProjectInline(admin.TabularInline):
+class CareerProjectInline(admin.StackedInline):
     model = CareerProject
+    show_change_link = True
+    extra = 0
+
+
+class CareerProjectImageInline(admin.TabularInline):
+    model = CareerProjectImage
+    show_change_link = True
+    extra = 0
+
+
+class ProjectImageInline(admin.TabularInline):
+    model = ProjectImage
     show_change_link = True
     extra = 0
 
@@ -92,20 +110,21 @@ class CareerAdmin(admin.ModelAdmin):
 
 
 @admin.register(CareerProject)
-class CareerAdmin(admin.ModelAdmin):
-    pass
+class CareerProjectAdmin(admin.ModelAdmin):
+    inlines = [CareerProjectImageInline]
 
 
 @admin.register(Project)
-class MyInfoAdmin(admin.ModelAdmin):
+class ProjectAdmin(admin.ModelAdmin):
     list_display = ["title", "introduction"]
+    inlines = [ProjectImageInline]
 
 
 @admin.register(Expression)
-class MyInfoAdmin(admin.ModelAdmin):
+class ExpressionAdmin(admin.ModelAdmin):
     pass
 
 
 @admin.register(Others)
-class MyInfoAdmin(admin.ModelAdmin):
+class OthersAdmin(admin.ModelAdmin):
     pass

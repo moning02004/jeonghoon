@@ -5,10 +5,12 @@ document.addEventListener('DOMContentLoaded', function () {
         itemDiv.classList.add("mb-4", "last:mb-0", "last:border-0", "border-b", "pb-3");
 
         Object.entries(attrs).forEach(([key, value]) => {
+            if (!data[key]) return;
+
             let attrDiv = document.createElement("div");
             attrDiv.classList.add("mb-4", "last:mb-0", "flex", "flex-col", "justify-between");
             let keyDiv = document.createElement("div")
-            keyDiv.classList.add("text-[0.8rem]", "font-bold", "text-muted")
+            keyDiv.classList.add("text-[0.8rem]", "font-medium", "text-muted")
             keyDiv.innerHTML = value
             attrDiv.appendChild(keyDiv)
 
@@ -31,12 +33,13 @@ document.addEventListener('DOMContentLoaded', function () {
         panel.appendChild(itemDiv)
     }
 
-    const getPanelBody = (attrs, panel, data, className="") => {
+    const getPanelBody = (attrs, panel, data, className = "") => {
         let itemDiv = document.createElement("div")
         itemDiv.classList.add("mb-4", "last:mb-0", "last:border-0", "border-b", "pb-3");
         if (className) itemDiv.classList.add(className)
 
         Object.entries(attrs).forEach(([key, value]) => {
+            if (!data[key]) return;
             let attrDiv = document.createElement("div");
             attrDiv.classList.add("mb-3", "last:mb-0", "flex", "flex-col", "justify-between");
 
