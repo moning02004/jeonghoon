@@ -10,7 +10,7 @@ from rest_framework import viewsets
 from weasyprint import HTML
 
 from me.models import Resume, Career, Project, Expression, Link, Skill, Career, Project
-from me.serializers import CareerDetailSerializer, ProjectDetailSerializer
+from me.serializers import CareerDetailSerializer, ProjectDetailSerializer, SkillSerializer, SkillDetailSerializer
 
 
 def index(request):
@@ -31,7 +31,7 @@ def index(request):
             'skills',
             queryset=Skill.objects.annotate(
                 effective_order=Least('resumeskill__order', 'order')
-            ).order_by('effective_order').distinct()
+            ).filter(is_visible=True).order_by('effective_order').distinct()
         ),
         Prefetch('careers', queryset=Career.objects.all().prefetch_related("skills").annotate(
             exit_date=Coalesce("end_date", datetime.now().date()),
@@ -70,6 +70,16 @@ class ProjectDetailViewSet(viewsets.ModelViewSet):
         return None
 
 
+class SkillViewSet(viewsets.ModelViewSet):
+    def get_queryset(self):
+        return Skill.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return SkillDetailSerializer
+        return None
+
+
 def create_pdf(request):
 
     resume = (Resume.objects.prefetch_related(
@@ -89,7 +99,7 @@ def create_pdf(request):
             'skills',
             queryset=Skill.objects.annotate(
                 effective_order=Least('resumeskill__order', 'order')
-            ).order_by('effective_order').distinct()
+            ).filter(is_visible=True).order_by('effective_order').distinct()
         ),
         Prefetch('careers', queryset=Career.objects.all().prefetch_related("skills", "careerproject_set").annotate(
             exit_date=Coalesce("end_date", datetime.now().date()),
