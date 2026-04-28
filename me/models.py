@@ -63,6 +63,8 @@ class CareerProject(models.Model):
     career = models.ForeignKey(Career, on_delete=models.CASCADE)
 
     title = models.CharField(max_length=100)
+    introduction = models.CharField(max_length=255, blank=True)
+
     period = models.CharField(max_length=30, blank=True)
     content = models.TextField(blank=True)
     result = models.TextField(blank=True)
