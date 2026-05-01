@@ -448,6 +448,20 @@
         <hr class="divider"/>
     {% endif %}
 
+    {% if cover_letters %}
+        <div class="section">
+            <div class="section-label"># 자기소개서</div>
+            <div>
+                {% for cover_letter in cover_letters %}
+                    <div class="project-item">
+                        <div class="project-name title">{{ cover_letter.title }}</div>
+                        <div class="project-intro indent">{{ cover_letter.content }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
     {% if others %}
         <div class="section">
             <div class="section-label"># 기타 사항</div>
@@ -464,19 +478,6 @@
         <hr class="divider"/>
     {% endif %}
 
-    {% if cover_letters %}
-        <div class="section">
-            <div class="section-label"># 자기소개서</div>
-            <div>
-                {% for cover_letter in cover_letters %}
-                    <div class="project-item">
-                        <div class="project-name title">{{ cover_letter.title }}</div>
-                        <div class="project-intro indent">{{ cover_letter.content }}</div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    {% endif %}
 </div>
 
 </body>
